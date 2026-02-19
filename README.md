@@ -1,1 +1,3 @@
 # network-speed-limiter
+
+The bash script was developed to limit the network interface speed on a Linux system using the tc utility from the iproute2 package. The script reads configuration parameters (interface name, upload/download limits, burst size, latency, and IFB device) from an .conf file, ensuring that bandwidth settings are not hardcoded. Outgoing traffic (egress) is limited using the TBF qdisc, while incoming traffic (ingress) is redirected to a virtual IFB device and shaped using HTB. This approach allows controlling both upload and download bandwidth in a structured and configurable way.
