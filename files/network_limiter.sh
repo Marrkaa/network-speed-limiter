@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-CONFIG="$SCRIPT_DIR/network_limiter.conf"
+SCRIPT_DIR="/etc/config"
+CONFIG="$SCRIPT_DIR/network_limiter"
 
 if [ -f "$CONFIG" ]; then
 	source "$CONFIG"
