@@ -60,9 +60,10 @@ show() {
 	$TC -s class show dev $IFB
 }
 
+load_config
+
 case "$1" in
   start)
-	load_config
 	echo -n "Starting bandwidth shaping: "
 	start
 	echo "done"
