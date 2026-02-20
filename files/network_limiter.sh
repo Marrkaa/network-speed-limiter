@@ -1,16 +1,24 @@
 #!/bin/sh
 
-SCRIPT_DIR="/etc/config"
-CONFIG="$SCRIPT_DIR/network_limiter"
+CONFIG="network_limiter"
+SECTION="main"
 
-if [ -f "$CONFIG" ]; then
-	source "$CONFIG"
-else
-	echo "Config file not found!"
-	exit 1
-fi
+load_config() {
+	TC=$(uci get ${CONFIG}.${SECTION}.tc)
+	IF=$(uci get ${CONFIG}.${SECTION}.interface)
+	DNLD=$(uci get ${CONFIG}.${SECTION}.download)
+	UPLD=$(uci get ${CONFIG}.${SECTION}.upload)
+	LTN=$(uci get ${CONFIG}.${SECTION}.latency)
+	BRT=$(uci get ${CONFIG}.${SECTION}.burst)
+	IFB=$(uci get ${CONFIG}.${SECTION}.ifb)
+}
 
 start() {
+
+	tc qdisc del dev $IF root 2>/dev/null
+	tc qdisc del dev $IF ingress 2>/dev/null
+	tc qdisc del dev $IFB root 2>/dev/null
+
 	$TC qdisc add dev $IF root tbf rate $UPLD burst $BRT latency $LTN
 
 	if test -z "$(lsmod | grep ifb)"; then
@@ -54,6 +62,7 @@ show() {
 
 case "$1" in
   start)
+	load_config
 	echo -n "Starting bandwidth shaping: "
 	start
 	echo "done"
